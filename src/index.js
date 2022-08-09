@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { Fragment, useEffect, useRef, useState } from "react";
 import ReactDOM from "react-dom/client";
 import { Stage, Layer, Shape, Text, Group } from "react-konva";
 
@@ -16,6 +16,7 @@ const App = () => {
   let initialWidth2 = d - c;
   let initialHeight1 = e - b;
   let initialHeight2 = q - b;
+  const [show, setShow] = useState(true);
   let [width1, updateWidth1] = useState(initialWidth1);
   const [width2, updateWidth2] = useState(initialWidth2);
   const [height1, updateHeight1] = useState(initialHeight1);
@@ -25,14 +26,12 @@ const App = () => {
     updateHeight2((height2) => q - b);
   }, [grad]);
   const handelIncWidth = () => {
-    // setWidth(width + 15);
     updateWidth1(width1 + 15);
     updateWidth2(width2 + 15);
     setA(a + 15);
     setD(d + 15);
   };
   const handelDecWidth = () => {
-    // setWidth(width - 15);
     updateWidth1(width1 - 15);
     updateWidth2(width2 - 15);
     setA(a - 15);
@@ -44,11 +43,11 @@ const App = () => {
     setE(e + 15);
     setQ(q + 15);
   };
-  const handelDecHeight = (e) => {
+  const handelDecHeight = () => {
     updateHeight1(height1 - 15);
     updateHeight2(height2 - 15);
-    // setE(e - 15);
-    // setQ(q - 15);
+    setE(e - 15);
+    setQ(q - 15);
   };
   const handelIncDegree = () => {
     setGrad(grad + 5);
@@ -56,16 +55,20 @@ const App = () => {
   const handelDecDegree = () => {
     setGrad(grad - 5);
   };
-  const handelDragEnd = (e) => {
-    setC((c) => {
-      return e.target.x;
-    });
-    setB((b) => {
-      return e.target.y;
-    });
+
+  const handelOnTexts = () => {
+    setShow(true);
   };
+  const handelOffTexts = () => {
+    setShow(false);
+  };
+
   return (
-    <>
+    <Fragment>
+      <div>
+        <button onClick={handelOnTexts}>on</button>
+        <button onClick={handelOffTexts}>off</button>
+      </div>
       <div>
         <label>width : </label>
         <button onClick={handelIncWidth}>+</button>
@@ -109,37 +112,40 @@ const App = () => {
             <Text
               x={(a - c) / 2}
               y={b}
-              text={width1}
+              text={width1.toString()}
               fontSize={12}
               fill={"red"}
+              visible={show}
             />
             <Text
               x={(d - c) / 2}
               y={e + 10}
-              text={width2}
+              text={width2.toString()}
               fontSize={12}
               fill={"red"}
+              visible={show}
             />
 
             <Text
-              x={c}
+              x={c - 1}
               y={(e - b) / 2}
-              text={height1}
-              fontSize={10}
+              text={height1.toFixed(0)}
+              fontSize={8}
               fill={"red"}
+              visible={show}
             />
             <Text
               x={a + 15}
               y={(q - b) / 2}
-              text={height2}
+              text={height2.toFixed(0)}
               fontSize={12}
               fill={"red"}
+              visible={show}
             />
             <Shape
               ref={shapeRef}
               x={10}
               y={10}
-              onDragEnd={handelDragEnd}
               sceneFunc={(context, shape) => {
                 context.beginPath();
                 context.moveTo(a, b);
@@ -159,7 +165,7 @@ const App = () => {
           </Group>
         </Layer>
       </Stage>
-    </>
+    </Fragment>
   );
 };
 
